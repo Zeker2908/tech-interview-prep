@@ -60,12 +60,13 @@
         <module>authentication-service</module>
         <module>notification-service</module>
         <module>api-gateway</module>
+        <module>task-service</module>
     </modules>
 
     <build>
         <plugins>
 
-            <!-- Правильная конфигурация spring-boot-maven-plugin: -->
+            <!-- Конфигурация spring-boot-maven-plugin: -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -78,8 +79,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- Опционально: вы всё ещё можете исключить из собранного JAR зависимость lombok,
-                     если она помечена как provided, но это уже не критично для repackage -->
                 <configuration>
                     <excludeGroupIds>org.projectlombok</excludeGroupIds>
                 </configuration>

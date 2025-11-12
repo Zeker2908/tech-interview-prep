@@ -49,7 +49,6 @@ logging:
   level:
     root: INFO
     org.springframework.security: DEBUG
-    eureka: INFO
     ru.zeker: DEBUG
 jwt:
   private-key-path: ${PRIVATE_KEY}

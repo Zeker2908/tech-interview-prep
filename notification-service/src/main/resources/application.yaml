@@ -25,10 +25,10 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6380}
-      database: 0
+      database: 1
 app:
   frontend-url: http://localhost:3000
-  company-name: Dating Application
+  company-name: ${COMPANY_NAME:Test}
   redis:
     duration: 15
   links:

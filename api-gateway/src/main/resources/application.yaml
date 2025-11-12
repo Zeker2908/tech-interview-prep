@@ -3,11 +3,11 @@ spring:
     name: api-gateway
   main:
     web-application-type: reactive
+
   cloud:
     gateway:
-      # discovery.locator теперь не нужен
       routes:
-        # Авторизация пользователя (jwt/auth)
+        # === AUTH SERVICE ===
         - id: authentication-service-auth
           uri: http://authentication-service:8081
           predicates:
@@ -17,7 +17,6 @@ spring:
           metadata:
             auth-required: false
 
-        # Управление пользователями
         - id: authentication-service-users
           uri: http://authentication-service:8081
           predicates:
@@ -25,7 +24,7 @@ spring:
           filters:
             - StripPrefix=2
 
-        # 1) Начало OAuth2-Authorization Code Flow
+        # === OAUTH2 FLOW ===
         - id: oauth2-authorization
           uri: http://authentication-service:8081
           predicates:
@@ -35,7 +34,6 @@ spring:
           metadata:
             auth-required: false
 
-        # 2) Callback от Google
         - id: oauth2-callback
           uri: http://authentication-service:8081
           predicates:
@@ -45,7 +43,7 @@ spring:
           metadata:
             auth-required: false
 
-        # Админка
+        # === ADMIN ===
         - id: authentication-service-admin
           uri: http://authentication-service:8081
           predicates:
@@ -55,7 +53,15 @@ spring:
           metadata:
             required-role: ADMIN
 
-        # Swagger (документация)
+        # === TASK SERVICE ===
+        - id: task-service
+          uri: http://task-service:8082
+          predicates:
+            - Path=/api/v${app.version}/tasks/**
+          filters:
+            - StripPrefix=2
+
+        # === Swagger passthrough ===
         - id: authentication-service-docs
           uri: http://authentication-service:8081
           predicates:
@@ -76,25 +82,15 @@ spring:
             auth-required: false
           order: -1
 
+      # === CORS для фронта ===
       globalcors:
         cors-configurations:
           '[/**]':
-            allowed-origins: "http://localhost:*"
-            allowed-methods:
-              - GET
-              - POST
-              - PUT
-              - PATCH
-              - DELETE
-              - OPTIONS
-            allowed-headers:
-              - Authorization
-              - Content-Type
-              - Accept
-              - X-Requested-With
-              - User-Name
-              - User-Role
-              - Cookie
+            allowed-origins:
+              - "http://localhost:3000"  # или твой фронт
+              - "http://127.0.0.1:3000"
+            allowed-methods: "*"
+            allowed-headers: "*"
             exposed-headers:
               - Authorization
               - User-Name
@@ -116,7 +112,7 @@ jwt:
 logging:
   level:
     root: INFO
-    org.springframework.security: DEBUG
+    org.springframework.security: INFO
     ru.zeker: DEBUG
 
 app:
@@ -134,3 +130,5 @@ springdoc:
         url: /v3/api-docs
       - name: authentication-service
         url: /authentication-service/v3/api-docs
+      - name: task-service
+        url: /task-service/v3/api-docs
