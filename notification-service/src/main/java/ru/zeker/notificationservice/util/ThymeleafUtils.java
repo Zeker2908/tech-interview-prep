@@ -1,7 +1,9 @@
 package ru.zeker.notificationservice.util;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class ThymeleafUtils {
-    private ThymeleafUtils() {}
 
     public static final String ACTION_URL = "actionUrl";
     public static final String CURRENT_YEAR = "currentYear";

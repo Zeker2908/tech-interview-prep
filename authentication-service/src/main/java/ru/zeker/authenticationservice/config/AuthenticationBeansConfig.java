@@ -1,7 +1,7 @@
 package ru.zeker.authenticationservice.config;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +18,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import ru.zeker.authenticationservice.service.UserService;
-import ru.zeker.common.util.JwtUtils;
 import ru.zeker.common.config.JwtProperties;
+import ru.zeker.common.util.JwtUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,20 +43,20 @@ public class AuthenticationBeansConfig {
     }
 
     @Bean
-    public Cache<String, Claims> claimsCache(){
-       return CacheBuilder.newBuilder()
+    public Cache<String, Claims> claimsCache() {
+        return Caffeine.newBuilder()
                 .maximumSize(10_000)
                 .expireAfterAccess(5, TimeUnit.SECONDS)
                 .build();
     }
 
     @Bean
-    public JwtUtils jwtUtils(JwtProperties jwtProperties, Cache<String,Claims> claimsCache) {
+    public JwtUtils jwtUtils(JwtProperties jwtProperties, Cache<String, Claims> claimsCache) {
         return new JwtUtils(jwtProperties, claimsCache);
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserService userService){
+    public UserDetailsService userDetailsService(UserService userService) {
         return userService::findByEmail;
     }
 

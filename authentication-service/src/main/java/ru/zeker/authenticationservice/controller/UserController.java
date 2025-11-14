@@ -13,7 +13,15 @@ import jakarta.ws.rs.core.HttpHeaders;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.zeker.authenticationservice.domain.dto.request.BindPasswordRequest;
 import ru.zeker.authenticationservice.domain.dto.request.ChangePasswordRequest;
 import ru.zeker.authenticationservice.domain.dto.response.UserResponse;
@@ -56,8 +64,8 @@ public class UserController {
                             responseCode = "200",
                             description = "Успешное получение данных пользователя",
                             content = @Content(schema = @Schema(implementation = UserResponse.class)))
-                            }
-                    )
+            }
+    )
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(
             @Parameter(description = "ID пользователя", required = true, example = "550e8400-e29b-41d4-a716-446655440000")
@@ -68,7 +76,7 @@ public class UserController {
     /**
      * Привязывает пароль к учетной записи пользователя.
      *
-     * @param id ID пользователя, передаваемое в заголовке запроса (обязательное, не пустое)
+     * @param id      ID пользователя, передаваемое в заголовке запроса (обязательное, не пустое)
      * @param request {@link BindPasswordRequest} с данными для привязки пароля
      * @return {@link ResponseEntity} с кодом 202 (Accepted)
      * @throws jakarta.validation.ConstraintViolationException если ID или данные запроса невалидны
@@ -96,10 +104,10 @@ public class UserController {
     /**
      * Изменяет пароль пользователя и выполняет выход из всех устройств.
      *
-     * @param id ID пользователя, передаваемое в заголовке запроса (обязательное, не пустое)
+     * @param id                     ID пользователя, передаваемое в заголовке запроса (обязательное, не пустое)
      * @param changerPasswordRequest {@link ChangePasswordRequest} с текущим и новым паролем
-     * @param refreshToken refresh token из куки (обязательный, не пустой)
-     * @param response {@link HttpServletResponse} для очистки куки
+     * @param refreshToken           refresh token из куки (обязательный, не пустой)
+     * @param response               {@link HttpServletResponse} для очистки куки
      * @return {@link ResponseEntity} с кодом 204 (No Content)
      * @throws jakarta.validation.ConstraintViolationException если параметры невалидны
      */

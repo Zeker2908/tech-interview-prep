@@ -1,6 +1,5 @@
-package ru.zeker.authenticationservice.controller;
+package ru.zeker.common.controller;
 
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -9,17 +8,12 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.messaging.handler.annotation.support.MethodArgumentTypeMismatchException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.*;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ru.zeker.common.exception.ApiException;
 
@@ -29,9 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RestControllerAdvice
 public class GlobalExceptionHandler {
-    //TODO: Добавить response setContentType problem+json
     private Map<String, Object> buildBaseErrorResponse(HttpStatus status, String message, String path, String requestId) {
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("timestamp", Instant.now().toString());
@@ -43,7 +35,7 @@ public class GlobalExceptionHandler {
         return response;
     }
 
-    private ResponseEntity<Map<String, Object>> buildErrorResponse(
+    protected ResponseEntity<Map<String, Object>> buildErrorResponse(
             HttpStatus status,
             String message,
             String path,
@@ -54,29 +46,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(errorResponse);
     }
 
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI(), request.getRequestId());
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Map<String,Object>> handleCredentialsException(BadCredentialsException ex, HttpServletRequest request){
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Неправильный логин или пароль",request.getRequestURI(), request.getRequestId());
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.FORBIDDEN, "Доступ запрещен", request.getRequestURI(), request.getRequestId());
-    }
-
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Map<String, Object>> handleApiException(ApiException ex, HttpServletRequest request) {
         return buildErrorResponse(ex.getStatus(), ex.getMessage(), request.getRequestURI(), request.getRequestId());
-    }
-
-    @ExceptionHandler(SignatureException.class)
-    public ResponseEntity<Map<String, Object>> handleSignatureException(SignatureException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.UNAUTHORIZED, "Недействительный токен", request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -95,21 +67,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<Map<String,Object>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex,
-                                                                                           HttpServletRequest request){
+    public ResponseEntity<Map<String, Object>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex,
+                                                                                            HttpServletRequest request) {
         return buildErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(MissingRequestCookieException.class)
     public ResponseEntity<Map<String, Object>> handleMissingRequestCookieException(MissingRequestCookieException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST,  String.format("Обязательный параметр куки '%s' отсутствует", ex.getCookieName()), request.getRequestURI(), request.getRequestId());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, String.format("Обязательный параметр куки '%s' отсутствует", ex.getCookieName()), request.getRequestURI(), request.getRequestId());
     }
-
-    @ExceptionHandler(LockedException.class)
-    public ResponseEntity<Map<String, Object>> handleLockedException(LockedException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.LOCKED, "Аккаунт пользователя заблокирован", request.getRequestURI(), request.getRequestId());
-    }
-
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpServletRequest request) {
@@ -120,20 +86,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleMissingParams(MissingServletRequestParameterException ex, HttpServletRequest request) {
         String message = String.format("Обязательный параметр '%s' отсутствует", ex.getParameterName());
         return buildErrorResponse(HttpStatus.BAD_REQUEST, message, request.getRequestURI(), request.getRequestId());
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Некорректное значение параметра", request.getRequestURI(), request.getRequestId());
-    }
-
-    @ExceptionHandler({CredentialsExpiredException.class, DisabledException.class, AccountExpiredException.class})
-    public ResponseEntity<Map<String, Object>> handleAccountStatusExceptions(RuntimeException ex, HttpServletRequest request) {
-        HttpStatus status = ex instanceof CredentialsExpiredException
-                ? HttpStatus.UNAUTHORIZED
-                : HttpStatus.FORBIDDEN;
-
-        return buildErrorResponse(status, ex.getMessage(), request.getRequestURI(), request.getRequestId());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

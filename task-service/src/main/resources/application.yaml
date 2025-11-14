@@ -3,11 +3,6 @@ server:
 spring:
   application:
     name: task-service
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      database: 2
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/users
     driver-class-name: org.postgresql.Driver
@@ -20,7 +15,6 @@ spring:
       hibernate:
         format_sql: true
     database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   liquibase:
     enabled: true

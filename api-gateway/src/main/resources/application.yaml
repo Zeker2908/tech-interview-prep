@@ -7,6 +7,23 @@ spring:
   cloud:
     gateway:
       routes:
+        # === TASK SERVICE ===
+        - id: task-service-admin
+          uri: http://task-service:8082
+          predicates:
+            - Path=/api/v${app.version}/admin/tasks/**
+          filters:
+            - StripPrefix=2
+          metadata:
+            required-role: ADMIN
+
+        - id: task-service
+          uri: http://task-service:8082
+          predicates:
+            - Path=/api/v${app.version}/tasks/**
+          filters:
+            - StripPrefix=2
+
         # === AUTH SERVICE ===
         - id: authentication-service-auth
           uri: http://authentication-service:8081
@@ -53,14 +70,6 @@ spring:
           metadata:
             required-role: ADMIN
 
-        # === TASK SERVICE ===
-        - id: task-service
-          uri: http://task-service:8082
-          predicates:
-            - Path=/api/v${app.version}/tasks/**
-          filters:
-            - StripPrefix=2
-
         # === Swagger passthrough ===
         - id: authentication-service-docs
           uri: http://authentication-service:8081
@@ -76,6 +85,16 @@ spring:
           uri: http://authentication-service:8081
           predicates:
             - Path=/authentication-service/swagger-ui.html
+          filters:
+            - StripPrefix=1
+          metadata:
+            auth-required: false
+          order: -1
+
+        - id: task-service-docs-swagger
+          uri: http://task-service:8082
+          predicates:
+            - Path=/task-service/swagger-ui.html
           filters:
             - StripPrefix=1
           metadata:
@@ -111,7 +130,7 @@ jwt:
 
 logging:
   level:
-    root: INFO
+    root: DEBUG
     org.springframework.security: INFO
     ru.zeker: DEBUG
 

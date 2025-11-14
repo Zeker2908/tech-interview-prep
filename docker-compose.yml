@@ -53,12 +53,12 @@ services:
     networks:
       - internal
 
-  # === Kafka UI (опционально, только для локальной отладки) ===
+  # === Kafka UI ===
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "8083:8080" # оставить только если нужно UI
+      - "8089:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092

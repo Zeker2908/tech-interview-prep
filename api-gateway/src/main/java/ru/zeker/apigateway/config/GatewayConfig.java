@@ -1,7 +1,8 @@
 package ru.zeker.apigateway.config;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.RemovalCause;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,20 +27,20 @@ public class GatewayConfig {
     @Bean
     public Cache<String, Claims> claimsCache(JwtProperties jwtProperties) {
         long cacheTtlMs = Math.max(0, jwtProperties.getAccess().getExpiration() - TimeUnit.MINUTES.toMillis(1));
-        return CacheBuilder.newBuilder()
+
+        return Caffeine.newBuilder()
                 .maximumSize(100_000)
                 .expireAfterWrite(cacheTtlMs, TimeUnit.MILLISECONDS)
-                .concurrencyLevel(Runtime.getRuntime().availableProcessors() * 2)
+                .evictionListener((String key, Claims value, RemovalCause cause) ->
+                        log.debug("Токен выселен из кэша: {}, причина: {}", key, cause))
+                .removalListener((String key, Claims value, RemovalCause cause) ->
+                        log.debug("Токен удален из кэша: {}, причина: {}", key, cause))
                 .recordStats()
-                .removalListener(notification ->
-                        log.debug("Токен выселен: {}, причина: {}",
-                                notification.getKey(),
-                                notification.getCause()))
                 .build();
     }
 
     @Bean
-    public JwtUtils jwtUtils(JwtProperties jwtProperties, Cache<String,Claims> claimsCache) {
+    public JwtUtils jwtUtils(JwtProperties jwtProperties, Cache<String, Claims> claimsCache) {
         return new JwtUtils(jwtProperties, claimsCache);
     }
 
@@ -47,5 +48,4 @@ public class GatewayConfig {
     public Jackson2JsonEncoder jsonEncoder() {
         return new Jackson2JsonEncoder();
     }
-
 }

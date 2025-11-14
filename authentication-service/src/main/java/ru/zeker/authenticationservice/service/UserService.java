@@ -58,10 +58,10 @@ public class UserService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void bindPassword(String userId, BindPasswordRequest request){
+    public void bindPassword(String userId, BindPasswordRequest request) {
         User user = findById(UUID.fromString(userId));
 
-        if(user.getLocalAuth()!=null){
+        if (user.getLocalAuth() != null) {
             throw new UserAlreadyExistsException("Пользователь уже привязал пароль");
         }
 
@@ -83,16 +83,16 @@ public class UserService {
 
         User user = findById(UUID.fromString(userId));
 
-        if(user.getLocalAuth()==null){
+        if (user.getLocalAuth() == null) {
             throw new IllegalStateException("Пользователь не зарегистрирован локально");
         }
 
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new AuthenticationCredentialsNotFoundException("Старый пароль не совпадает");
         }
-        
+
         passwordHistoryService.create(user, newPassword);
-        
+
         user.getLocalAuth().setPassword(passwordEncoder.encode(newPassword));
         repository.save(user);
         log.info("Пароль изменен для пользователя с ID: {}", user.getId());
