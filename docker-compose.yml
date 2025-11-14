@@ -95,6 +95,7 @@ services:
       - authentication-service
       - task-service
       - notification-service
+      - solution-service
     networks:
       - internal
 
@@ -164,11 +165,26 @@ services:
       POSTGRES_HOST: postgres:5432
       POSTGRES_USERNAME: admin
       POSTGRES_PASSWORD: admin
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
     depends_on:
       - postgres
-      - redis
+    networks:
+      - internal
+
+  # === Solution Service ===
+  solution-service:
+    image: solution-service:latest
+    build:
+      context: .
+      dockerfile: solution-service/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    environment:
+      POSTGRES_HOST: postgres:5432
+      POSTGRES_USERNAME: admin
+      POSTGRES_PASSWORD: admin
+    depends_on:
+      - postgres
     networks:
       - internal
 

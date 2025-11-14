@@ -61,6 +61,7 @@
         <module>notification-service</module>
         <module>api-gateway</module>
         <module>task-service</module>
+        <module>solution-service</module>
     </modules>
 
     <build>
