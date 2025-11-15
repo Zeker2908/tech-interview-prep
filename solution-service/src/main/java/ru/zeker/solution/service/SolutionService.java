@@ -10,7 +10,7 @@ import ru.zeker.common.dto.task.response.TaskResponse;
 import ru.zeker.solution.client.TaskClient;
 import ru.zeker.solution.domain.mapper.SolutionMapper;
 import ru.zeker.solution.domain.model.entity.Solution;
-import ru.zeker.solution.domain.model.enums.SolutionStatus;
+import ru.zeker.common.dto.solution.SolutionStatus;
 import ru.zeker.solution.exception.SolutionNotFoundException;
 import ru.zeker.solution.repository.SolutionRepository;
 

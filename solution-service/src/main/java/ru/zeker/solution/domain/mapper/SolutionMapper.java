@@ -10,7 +10,7 @@ import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 import ru.zeker.common.dto.solution.response.SolutionResponse;
 import ru.zeker.common.dto.task.TestCase;
 import ru.zeker.solution.domain.model.entity.Solution;
-import ru.zeker.solution.domain.model.enums.SolutionStatus;
+import ru.zeker.common.dto.solution.SolutionStatus;
 
 import java.util.List;
 import java.util.UUID;

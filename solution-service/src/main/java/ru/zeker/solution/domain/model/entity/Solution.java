@@ -17,7 +17,7 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
 import ru.zeker.common.dto.solution.Language;
 import ru.zeker.common.model.BaseEntity;
-import ru.zeker.solution.domain.model.enums.SolutionStatus;
+import ru.zeker.common.dto.solution.SolutionStatus;
 
 import java.util.Objects;
 import java.util.UUID;

@@ -5,4 +5,5 @@ import ru.zeker.common.controller.GlobalExceptionHandler;
 
 @RestControllerAdvice
 public class SolutionExceptionHandler extends GlobalExceptionHandler {
+    //TODO: добавить обработку fiegn клиента
 }

@@ -29,7 +29,7 @@ spring:
       port: ${REDIS_PORT:6379}
       database: 0
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/users
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/interview
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USERNAME:admin}
     password: ${POSTGRES_PASSWORD:admin}

@@ -1,4 +1,4 @@
-package ru.zeker.solution.config;
+package ru.zeker.sandbox.config;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;

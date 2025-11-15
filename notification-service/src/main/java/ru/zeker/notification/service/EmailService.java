@@ -39,7 +39,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    @Value("${app.company-name:Dating Application}")
+    @Value("${app.company-name:Tech Interview}")
     private String companyName;
 
     /**
@@ -78,7 +78,7 @@ public class EmailService {
 
             String senderName = emailContext.getFromDisplayName() != null
                     ? emailContext.getFromDisplayName()
-                    : "Dating API";
+                    : companyName;
             
             // Настройка письма
             messageHelper.setFrom(emailContext.getFrom(), senderName);
