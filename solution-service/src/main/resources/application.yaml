@@ -20,6 +20,18 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost}
+    admin:
+      properties:
+        offsets.topic.replication-factor: 1
+        transactions.state.log.replication-factor: 1
+        transactions.state.log.min.isr: 1
+      auto-create: true
+
+task:
+  service:
+    url: http://task-service:8082
 
 logging:
   level:

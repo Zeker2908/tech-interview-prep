@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-import ru.zeker.common.dto.kafka.EmailEvent;
+import ru.zeker.common.dto.kafka.notification.EmailEvent;
 import ru.zeker.notification.dto.EmailContext;
 import ru.zeker.notification.exception.EmailSendingException;
 import ru.zeker.notification.util.ThymeleafUtils;

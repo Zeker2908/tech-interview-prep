@@ -60,11 +60,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: tests_total
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
                   name: feedback
                   type: jsonb
                   constraints:

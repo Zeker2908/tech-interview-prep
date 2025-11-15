@@ -12,7 +12,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.type.SqlTypes;
 import ru.zeker.common.dto.solution.Language;
 import ru.zeker.common.model.BaseEntity;
 import ru.zeker.solution.domain.model.enums.SolutionStatus;
@@ -52,9 +54,7 @@ public class Solution extends BaseEntity {
     @Column(nullable = false)
     private int testsPassed;
 
-    @Column(nullable = false)
-    private int testsTotal;
-
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private String feedback;
 

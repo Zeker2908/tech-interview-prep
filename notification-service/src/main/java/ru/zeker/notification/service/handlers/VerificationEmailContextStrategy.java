@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.zeker.common.dto.kafka.EmailEvent;
+import ru.zeker.common.dto.kafka.notification.EmailEvent;
 import ru.zeker.notification.dto.EmailContext;
 import ru.zeker.notification.util.ThymeleafUtils;
 import ru.zeker.notification.service.EmailService;

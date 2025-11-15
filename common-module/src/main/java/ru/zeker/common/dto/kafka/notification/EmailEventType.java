@@ -1,4 +1,4 @@
-package ru.zeker.common.dto.kafka;
+package ru.zeker.common.dto.kafka.notification;
 
 public enum EmailEventType {
     EMAIL_VERIFICATION,

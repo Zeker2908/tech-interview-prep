@@ -9,8 +9,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.zeker.common.dto.kafka.EmailEvent;
-import ru.zeker.common.dto.kafka.EmailEventType;
+import ru.zeker.common.dto.kafka.notification.EmailEvent;
+import ru.zeker.common.dto.kafka.notification.EmailEventType;
 import ru.zeker.notification.dto.EmailContext;
 import ru.zeker.notification.service.handlers.EmailContextStrategy;
 
@@ -36,12 +36,12 @@ public class ConsumerKafkaListeners {
 
     /**
      * Слушатель событий отправки email для пользователей.
-     * Обрабатывает пакеты сообщений из топика 'email-notification-events'
+     * Обрабатывает пакеты сообщений из топика 'email.notification.events'
      *
      * @param record список записей с событиями отправки email для пользователей
      */
     @KafkaListener(
-            topics = "email-notification-events",
+            topics = "email.notification.events",
             containerFactory = "emailKafkaListenerContainerFactory"
     )
     void listenRegisteredEvents(

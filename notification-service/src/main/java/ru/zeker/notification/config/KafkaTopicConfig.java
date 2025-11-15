@@ -12,7 +12,7 @@ public class KafkaTopicConfig {
     @Bean
     public NewTopic emailNotificationDltTopic() {
         return TopicBuilder
-                .name("email-notification-events" + ".DLT")
+                .name("email.notification.events" + ".DLT")
                 .partitions(32)
                 .replicas(1)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "604800000")

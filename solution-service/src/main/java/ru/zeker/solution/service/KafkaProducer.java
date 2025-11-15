@@ -1,11 +1,10 @@
-package ru.zeker.authentication.service;
+package ru.zeker.solution.service;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import ru.zeker.common.dto.kafka.notification.EmailEvent;
+import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -13,8 +12,8 @@ import ru.zeker.common.dto.kafka.notification.EmailEvent;
 public class KafkaProducer {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void sendEmailEvent(@Valid EmailEvent event) {
-        kafkaTemplate.send("email.notification.events", event.getId(), event);
+    public void sendEmailEvent(SolutionExecRequest message) {
+        kafkaTemplate.send("solution.exec.request", message.getSolutionId(), message);
     }
 
 }

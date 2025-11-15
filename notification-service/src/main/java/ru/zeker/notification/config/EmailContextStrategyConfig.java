@@ -2,7 +2,7 @@ package ru.zeker.notification.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.zeker.common.dto.kafka.EmailEventType;
+import ru.zeker.common.dto.kafka.notification.EmailEventType;
 import ru.zeker.notification.service.handlers.EmailContextStrategy;
 import ru.zeker.notification.service.handlers.VerificationEmailContextStrategy;
 import ru.zeker.notification.service.handlers.ForgotPasswordEmailContextStrategy;

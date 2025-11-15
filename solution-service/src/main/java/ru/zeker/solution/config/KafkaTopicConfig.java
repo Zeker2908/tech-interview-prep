@@ -1,4 +1,4 @@
-package ru.zeker.authentication.config;
+package ru.zeker.solution.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
@@ -10,9 +10,9 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic emailNotificationTopic() {
+    public NewTopic solutionExecRequestTopic() {
         return TopicBuilder
-                .name("email.notification.events")
+                .name("solution.exec.request")
                 .partitions(32)
                 .replicas(1)
                 .config(TopicConfig.RETENTION_MS_CONFIG, "604800000")

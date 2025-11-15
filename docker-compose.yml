@@ -183,8 +183,10 @@ services:
       POSTGRES_HOST: postgres:5432
       POSTGRES_USERNAME: admin
       POSTGRES_PASSWORD: admin
+      KAFKA_HOST: kafka:9092
     depends_on:
       - postgres
+      - kafka
     networks:
       - internal
 
