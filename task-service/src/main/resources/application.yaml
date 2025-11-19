@@ -4,7 +4,7 @@ spring:
   application:
     name: task-service
   datasource:
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/users
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost:5432}/interview
     driver-class-name: org.postgresql.Driver
     username: ${POSTGRES_USERNAME:admin}
     password: ${POSTGRES_PASSWORD:admin}
@@ -24,6 +24,10 @@ logging:
   level:
     root: INFO
     ru.zeker: DEBUG
+
+app:
+  domain: http://localhost:8080
+  version: 1
 
 springdoc:
   api-docs:

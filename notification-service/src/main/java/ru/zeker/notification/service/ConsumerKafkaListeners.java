@@ -47,11 +47,14 @@ public class ConsumerKafkaListeners {
     void listenRegisteredEvents(
             ConsumerRecord<String, EmailEvent> record
     ) {
-        log.info("Получено сообщение");
-
-        handleRecord(record);
-
-        log.info("Обработка события завершена");
+        try {
+            log.info("Получено сообщение");
+            handleRecord(record);
+            log.info("Обработка события завершена");
+        } catch (Exception e) {
+            log.error("Failed to process Kafka message (offset={}, partition={}), error: {}",
+                    record.offset(), record.partition(), e.getMessage(), e);
+        }
     }
 
     /**

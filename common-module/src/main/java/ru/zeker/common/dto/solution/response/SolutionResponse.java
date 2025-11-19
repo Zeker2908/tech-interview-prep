@@ -20,7 +20,5 @@ public class SolutionResponse {
     private String code;
     private Language language;
     private String status;
-    private int testsTotal;
-    private int testsPassed;
     private String feedback;
 }

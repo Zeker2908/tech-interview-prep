@@ -35,7 +35,7 @@ public class ForgotPasswordEmailContextStrategy implements EmailContextStrategy 
 
         return emailService.createEmailContext(
                 event,
-                "Восстановление пароля в Dating API",
+                "Восстановление пароля",
                 FORGOT_PASSWORD_TEMPLATE,
                 Map.of(ThymeleafUtils.ACTION_URL, resetPasswordUrl)
         );

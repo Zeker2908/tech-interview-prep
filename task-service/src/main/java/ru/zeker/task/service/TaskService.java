@@ -36,7 +36,7 @@ public class TaskService {
         Specification<Task> spec = Specification
                 .where(TaskSpecification.hasTitle(title))
                 .and(TaskSpecification.hasDifficulties(difficulties))
-                .and(TaskSpecification.hasAllTags(tags));
+                .and(TaskSpecification.hasAnyTags(tags));
 
         return repository.findAll(spec, Pageable.ofSize(count));
     }
@@ -89,6 +89,10 @@ public class TaskService {
         }
 
         repository.deleteById(id);
+    }
+
+    public boolean hasAnyTasks() {
+        return repository.count() > 0;
     }
 
 }

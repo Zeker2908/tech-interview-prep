@@ -13,7 +13,6 @@ import java.util.Set;
 @Mapper(componentModel = "spring", imports = {Tag.class, java.util.stream.Collectors.class})
 public interface TaskMapper {
 
-    @Mapping(target = "difficulty", source = "difficulty")
     @Mapping(target = "tags", expression = "java(task.getTags().stream().map(Tag::getName).collect(Collectors.toSet()))")
     TaskResponse toResponse(Task task);
 

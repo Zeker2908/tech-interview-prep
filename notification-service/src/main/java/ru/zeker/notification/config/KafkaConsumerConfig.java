@@ -19,6 +19,7 @@ import org.springframework.kafka.support.serializer.DeserializationException;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.messaging.converter.MessageConversionException;
+import ru.zeker.common.dto.kafka.notification.EmailEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +56,7 @@ public class KafkaConsumerConfig {
 
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, EmailEvent.class);
 
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 500);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);

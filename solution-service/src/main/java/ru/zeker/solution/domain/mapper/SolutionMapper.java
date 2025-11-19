@@ -10,7 +10,7 @@ import ru.zeker.common.dto.kafka.solution.SolutionExecRequest;
 import ru.zeker.common.dto.solution.response.SolutionResponse;
 import ru.zeker.common.dto.task.TestCase;
 import ru.zeker.solution.domain.model.entity.Solution;
-import ru.zeker.solution.domain.model.enums.SolutionStatus;
+import ru.zeker.common.dto.solution.SolutionStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +19,6 @@ import java.util.UUID;
 public interface SolutionMapper {
 
     @Mapping(target = "solutionId", source = "id")
-    @Mapping(target = "taskId", source = "taskId", qualifiedByName = "uuidToString")
     SolutionExecRequest toKafkaMessage(Solution solution, @Context List<TestCase> tests);
 
     @Mapping(target = "status", source = "status", qualifiedByName = "solutionStatusToString")

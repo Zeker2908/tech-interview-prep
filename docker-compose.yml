@@ -8,9 +8,10 @@ services:
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: users
+      POSTGRES_DB: interview
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./init-judge0-db.sql:/docker-entrypoint-initdb.d/init-judge0-db.sql
     networks:
       - internal
 
@@ -48,8 +49,29 @@ services:
       KAFKA_DEFAULT_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1" ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
     volumes:
       - kafka_data:/data
+    networks:
+      - internal
+
+  init-kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    depends_on:
+      kafka:
+        condition: service_healthy
+    command: |
+      bash -c "
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.request --partitions 32 --replication-factor 1 &&
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic solution.exec.result --partitions 32 --replication-factor 1 &&
+        kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic email.notification.events --partitions 32 --replication-factor 1
+      "
+    init: true
     networks:
       - internal
 
@@ -69,6 +91,26 @@ services:
       - zookeeper
     networks:
       - internal
+
+  # https://github.com/judge0/judge0/releases
+  # На проде раскоментировать нужен linux
+  #  # === Judge0 Worker ===
+#  judge0:
+#    image: judge0/judge0:1.13.1
+#    privileged: true
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    environment:
+#      - DATABASE_URL=postgresql://admin:admin@postgres:5432/judge0
+#      - REDIS_URL=redis://redis:6379/10
+#      - REDIS_HOST=redis
+#      - REDIS_PORT=6379
+#    restart: unless-stopped
+#    depends_on:
+#      - postgres
+#      - redis
+#    networks:
+#      - internal
 
   # === API Gateway ===
   api-gateway:
@@ -143,12 +185,14 @@ services:
       KAFKA_HOST: kafka:9092
       MAIL_USERNAME: ${MAIL_USERNAME}
       MAIL_PASSWORD: ${MAIL_PASSWORD}
-      COMPANY_NAME: PSUTI
+      COMPANY_NAME: Interview
       REDIS_HOST: redis
       REDIS_PORT: 6379
     depends_on:
-      - redis
-      - kafka
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - internal
 
@@ -185,8 +229,30 @@ services:
       POSTGRES_PASSWORD: admin
       KAFKA_HOST: kafka:9092
     depends_on:
-      - postgres
-      - kafka
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    networks:
+      - internal
+
+  # === Sandbox Service ===
+  sandbox-service:
+    image: sandbox-service:latest
+    build:
+      context: .
+      dockerfile: sandbox-service/Dockerfile
+      args:
+        DOCKER_BUILDKIT: 1
+    restart: always
+    environment:
+      KAFKA_HOST: kafka:9092
+      JUDGE0_URL: ${JUDGE0_URL}
+    depends_on:
+      kafka:
+        condition: service_healthy
+      solution-service:
+        condition: service_started
     networks:
       - internal
 

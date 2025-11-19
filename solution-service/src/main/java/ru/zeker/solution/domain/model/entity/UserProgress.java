@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +18,9 @@ import ru.zeker.common.model.BaseEntity;
 import java.util.Objects;
 import java.util.UUID;
 
+import static ru.zeker.solution.constant.Confidences.MAX_CONFIDENCE_STR;
+import static ru.zeker.solution.constant.Confidences.MIN_CONFIDENCE_STR;
+
 @Getter
 @Setter
 @Builder
@@ -26,7 +31,8 @@ import java.util.UUID;
         @UniqueConstraint(columnNames = {"userId", "topic"})
 },
         indexes = {
-                @Index(columnList = "userId")
+                @Index(columnList = "userId"),
+                @Index(columnList = "userId, confidence")
         })
 public class UserProgress extends BaseEntity {
 
@@ -38,6 +44,8 @@ public class UserProgress extends BaseEntity {
 
     // 0.0 - 1.0
     @Column(nullable = false)
+    @DecimalMin(value = MIN_CONFIDENCE_STR)
+    @DecimalMax(value = MAX_CONFIDENCE_STR)
     private double confidence;
 
     @Override

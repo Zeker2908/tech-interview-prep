@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
+import ru.zeker.common.dto.solution.SolutionStatus;
 
 @Data
 @AllArgsConstructor
@@ -16,8 +15,6 @@ import java.util.List;
 public class SolutionExecResult {
 
     private String solutionId;
-    private String taskId;
-    private List<TestResult> tests;
-    private String compileError;
-    private String runtimeError;
+    private SolutionStatus status;
+    private String descriptionError;
 }

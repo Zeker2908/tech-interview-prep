@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -44,6 +45,7 @@ import static ru.zeker.common.headers.ApiHeaders.USER_ID;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Tag(name = "User Management", description = "API для управления пользователями и их аутентификационными данными")
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
@@ -68,7 +70,7 @@ public class UserController {
     )
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(
-            @Parameter(description = "ID пользователя", required = true, example = "550e8400-e29b-41d4-a716-446655440000")
+            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id) {
         return ResponseEntity.ok(userMapper.toResponse(userService.findById(UUID.fromString(id))));
     }
@@ -92,7 +94,7 @@ public class UserController {
     )
     @PutMapping("/me/password")
     public ResponseEntity<Void> bindPassword(
-            @Parameter(description = "ID пользователя", required = true, example = "550e8400-e29b-41d4-a716-446655440000")
+            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id,
 
             @Parameter(description = "Данные для привязки пароля", required = true)
@@ -122,7 +124,7 @@ public class UserController {
     )
     @PatchMapping("/me/password")
     public ResponseEntity<Void> changePassword(
-            @Parameter(description = "ID пользователя", required = true, example = "550e8400-e29b-41d4-a716-446655440000")
+            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id,
 
             @Parameter(description = "Текущий и новый пароль", required = true)
@@ -147,7 +149,7 @@ public class UserController {
     )
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteCurrentUser(
-            @Parameter(description = "ID пользователя", required = true, example = "550e8400-e29b-41d4-a716-446655440000")
+            @Parameter(description = "Уникальный идентификатор пользователя", hidden = true)
             @RequestHeader(USER_ID) @NotBlank String id,
 
             @Parameter(description = "Refresh token из куки")

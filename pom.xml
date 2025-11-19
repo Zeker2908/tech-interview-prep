@@ -62,6 +62,7 @@
         <module>api-gateway</module>
         <module>task-service</module>
         <module>solution-service</module>
+        <module>sandbox-service</module>
     </modules>
 
     <build>

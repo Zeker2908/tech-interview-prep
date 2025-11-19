@@ -55,11 +55,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: tests_passed
-                  type: int
-                  constraints:
-                    nullable: false
-              - column:
                   name: feedback
                   type: jsonb
                   constraints:
@@ -124,6 +119,14 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
+        - createIndex:
+            tableName: user_progress
+            indexName: idx_user_progress_user_id_confidence
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: confidence
 
         - addUniqueConstraint:
             tableName: user_progress

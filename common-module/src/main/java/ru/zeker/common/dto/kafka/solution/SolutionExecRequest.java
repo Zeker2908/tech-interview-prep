@@ -18,7 +18,6 @@ import java.util.List;
 public class SolutionExecRequest {
 
     private String solutionId;
-    private String taskId;
     private Language language;
     private String code;
     private List<TestCase> tests;

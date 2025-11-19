@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +28,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class TaskController {
 
     private final TaskService taskService;
@@ -68,10 +72,11 @@ public class TaskController {
             @RequestParam(value = "tags", required = false) List<String> tags,
 
             @Parameter(description = "Максимальное количество задач для возврата (по умолчанию 20, максимум 100)")
+            @Min(1)
+            @Max(100)
             @RequestParam(value = "count", defaultValue = "20") int count
     ) {
-        int limit = Math.min(Math.max(count, 1), 100);
-        return ResponseEntity.ok(taskService.getTasks(title, difficulties, tags, limit)
+        return ResponseEntity.ok(taskService.getTasks(title, difficulties, tags, count)
                 .stream().map(taskMapper::toResponse).toList());
     }
 
@@ -117,10 +122,11 @@ public class TaskController {
     @GetMapping("/random")
     public ResponseEntity<List<TaskResponse>> getRandomTasks(
             @Parameter(description = "Количество случайных задач", example = "5", required = true)
+            @Min(1)
+            @Max(100)
             @RequestParam(value = "count", defaultValue = "10") int count
     ) {
-        int limit = Math.min(Math.max(count, 1), 100);
-        return ResponseEntity.ok(taskService.getRandomTasks(limit)
+        return ResponseEntity.ok(taskService.getRandomTasks(count)
                 .stream()
                 .map(taskMapper::toResponse)
                 .toList());

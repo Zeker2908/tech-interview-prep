@@ -27,29 +27,14 @@ public class TaskSpecification {
     }
 
 
-    public static Specification<Task> hasAllTags(List<String> tagNames) {
+    public static Specification<Task> hasAnyTags(List<String> tagNames) {
         return (root, query, builder) -> {
             if (tagNames == null || tagNames.isEmpty()) {
                 return builder.conjunction();
             }
-
-            // Создаем подзапрос
-            var subquery = query.subquery(Long.class);
-            var subRoot = subquery.from(Task.class);
-            var join = subRoot.join("tags");
-
-            // Подсчёт задач, у которых все теги из списка
-            subquery.select(subRoot.get("id"));
-            subquery.where(
-                    builder.and(
-                            builder.equal(subRoot.get("id"), root.get("id")),
-                            join.get("name").in(tagNames)
-                    )
-            );
-            subquery.groupBy(subRoot.get("id"));
-            subquery.having(builder.equal(builder.countDistinct(join.get("name")), tagNames.size()));
-
-            return builder.exists(subquery);
+            query.distinct(true);
+            var join = root.join("tags");
+            return join.get("name").in(tagNames);
         };
     }
 

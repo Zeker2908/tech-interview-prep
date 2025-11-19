@@ -10,5 +10,5 @@ public enum Difficulty {
     MEDIUM(1.0),
     HARD(1.2);
 
-    private final Double rating;
+    private final double rating;
 }

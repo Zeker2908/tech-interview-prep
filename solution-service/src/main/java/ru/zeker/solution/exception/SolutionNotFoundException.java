@@ -9,6 +9,6 @@ public class SolutionNotFoundException extends ApiException {
     }
 
     public SolutionNotFoundException() {
-        super("Solution not found", HttpStatus.NOT_FOUND);
+        super("Решение не найдено", HttpStatus.NOT_FOUND);
     }
 }

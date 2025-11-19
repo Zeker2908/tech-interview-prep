@@ -15,6 +15,5 @@ public class UserProgressResponse {
 
     private UUID id;
     private String topic;
-    private UUID userId;
     private double confidence;
 }

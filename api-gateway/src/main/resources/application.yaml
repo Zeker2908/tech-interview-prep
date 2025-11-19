@@ -15,6 +15,13 @@ spring:
           filters:
             - StripPrefix=2
 
+        - id: solution-service
+          uri: http://solution-service:8084
+          predicates:
+            - Path=/api/v${app.version}/recommendations/**
+          filters:
+            - StripPrefix=2
+
         # === TASK SERVICE ===
         - id: task-service-admin
           uri: http://task-service:8082
@@ -84,6 +91,26 @@ spring:
           uri: http://authentication-service:8081
           predicates:
             - Path=/authentication-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+          metadata:
+            auth-required: false
+          order: -1
+
+        - id: solution-service-docs
+          uri: http://solution-service:8084
+          predicates:
+            - Path=/solution-service/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+          metadata:
+            auth-required: false
+          order: -1
+
+        - id: task-service-docs
+          uri: http://task-service:8082
+          predicates:
+            - Path=/task-service/v3/api-docs/**
           filters:
             - StripPrefix=1
           metadata:
@@ -164,9 +191,9 @@ springdoc:
     enabled: true
     config-url: /v3/api-docs/swagger-config
     urls:
-      - name: gateway-service
-        url: /v3/api-docs
       - name: authentication-service
         url: /authentication-service/v3/api-docs
       - name: task-service
         url: /task-service/v3/api-docs
+      - name: solution-service
+        url: /solution-service/v3/api-docs
